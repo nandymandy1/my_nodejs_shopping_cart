@@ -1,0 +1,36 @@
+<div class="row justify-content-center align-items-center">
+    <div class="col-md-8 col-md-offest-2">
+        <h2>User Profile</h2>
+        <hr>
+        <h3 class="text-center">My Orders</h3>
+        {{#each orders}}
+        <div class="card mb-3" style="padding:20px;">
+            <div class="card-content">
+                <ul class="list-group">
+                    {{#each this.items}}
+                    <li class="list-group-item" style="background: #F4F6F6;">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12 col-lg-4">
+                                <div class="mr-auto">{{this.item.title}}</div>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-lg-4">
+                                <div class="mr-auto"><span class="badge badge-danger">{{ this.qty }} Units</span></div>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-lg-4">
+                                <div class="ml-auto"><span class="badge badge-success">₹{{ this.price }}</span></div>
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="card-footer" style="background-color: #CACFD2;">
+                <div class="mr-auto">
+                    <stron>Your Total Price:</stron>
+                    <span class="badge badge-success ml-auto">₹{{this.cart.totalPrice}}</span>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
