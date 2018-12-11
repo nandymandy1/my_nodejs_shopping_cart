@@ -49,7 +49,6 @@ passport.use('local.register', new LocalStartegy({
 })
 );
 
-
 passport.use('local.login', new LocalStartegy({
     usernameField: 'email',
     passwordField: 'password',

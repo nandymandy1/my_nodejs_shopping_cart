@@ -48,11 +48,11 @@ body {
     background: #E74C3C;
 }
 
-ul .list-group {
+.list-group {
     border-radius: 0;
 }
 
-li .list-group-item {
+.list-group-item {
     border-radius: 0;
 }
 

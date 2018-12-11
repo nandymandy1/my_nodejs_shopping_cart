@@ -1,35 +1,39 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var routes = require('./routes/index');
-var userRoutes = require('./routes/user');
-var expressHbs = require('express-handlebars');
-var session = require('express-session');
-var passport = require('passport');
-var flash = require('connect-flash');
-var passport = require('passport');
-var validator = require('express-validator');
-var mongoose = require('mongoose');
-var MongoStore = require('connect-mongo')(session);
-var Insta = require('instamojo-nodejs');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+
+const routes = require('./routes/index');
+const userRoutes = require('./routes/user');
+const categoryRoutes = require('./routes/categories');
+
+const expressHbs = require('express-handlebars');
+const session = require('express-session');
+const passport = require('passport');
+const flash = require('connect-flash');
+const validator = require('express-validator');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo')(session);
+const Insta = require('instamojo-nodejs');
+// Bring in cors moudule
+const cors = require('cors');
 
 
 // App Initialization
-var app = express();
+const app = express();
 
 // Mongodb Connection
 const config = require('./config/config');
-mongoose.connect(config.database, { useNewUrlParser: true });
-// Succssfull connection
-mongoose.connection.on('connected', () => {
-  console.log("Connected to database" + config.database);
-});
-// On connection failure
-mongoose.connection.on('error', (err) => {
-  console.log("Connection to database is fialed" + config.database);
-});
+
+mongoose.connect(config.database, { useNewUrlParser: true })
+  .then(() => {
+    console.log("Connected to database" + config.database);
+  })
+  .catch((err) => {
+    console.log("Connection to database is fialed" + config.database);
+  });
+
 
 // Passport Stategy
 require('./config/passport');
@@ -59,6 +63,9 @@ app.use(session({
 }));
 // Session Middleware
 
+// Cors middlewares
+app.use(cors());
+
 
 // Flash Session
 app.use(flash());
@@ -78,6 +85,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/user', userRoutes);
+app.use('/categories', categoryRoutes);
 app.use('/', routes);
 
 // catch 404 and forward to error handler

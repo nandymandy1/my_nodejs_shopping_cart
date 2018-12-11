@@ -1,36 +1,55 @@
-var express = require('express');
-var router = express.Router();
-var Product = require('../models/Product');
-var csrf = require('csurf');
-var Cart = require('../models/Cart');
+const express = require('express');
+const router = express.Router();
+const Product = require('../models/Product');
+const csrf = require('csurf');
+const Cart = require('../models/Cart');
 
 // Instamojo Payment Portal
-var Insta = require('instamojo-nodejs');
-var Order = require('../models/Order');
-
+const Insta = require('instamojo-nodejs');
+const Order = require('../models/Order');
 
 // CSRF Protection
-var csrfProtection = csrf();
+const csrfProtection = csrf();
 router.use(csrfProtection);
 
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
   Product.find((err, docs) => {
-    var productChunks = [];
-    var chunkSize = 3;
-    for (var i = 0; i < docs.length; i += chunkSize) {
+    let productChunks = [];
+    let chunkSize = 3;
+    for (let i = 0; i < docs.length; i += chunkSize) {
       productChunks.push(docs.slice(i, i + chunkSize));
     }
-    res.render('shop/index', { title: 'Shopping Cart', products: productChunks });
+    res.render('shop/index', {
+      title: 'Shopping Cart',
+      csrfToken: req.csrfToken(),
+      products: productChunks
+    });
   });
+});
+
+
+//Get all the products by category name
+router.get('/products/:category', (req, res, next) => {
+  const category = req.params.category;
+  Product.find({ category: category })
+    .then(products => {
+      let productChunks = [];
+      let chunkSize = 3;
+      for (let i = 0; i < products.length; i += chunkSize) {
+        productChunks.push(products.slice(i, i + chunkSize));
+      }
+      res.render('shop/index', { title: 'Shopping Cart', products: productChunks });
+    })
+    .catch(err => res.json({ msg: 'There are no products of this category' }));
 });
 
 
 // Adding Products to the cart if User logged in or logged out
 router.get('/add-to-cart/:id', (req, res, next) => {
-  var productId = req.params.id;
-  var cart = new Cart((req.session.cart) ? (req.session.cart) : ({}));
+  let productId = req.params.id;
+  let cart = new Cart((req.session.cart) ? (req.session.cart) : ({}));
   Product.findById(productId, (err, product) => {
     if (err) {
       return res.redirect('/');
@@ -42,28 +61,63 @@ router.get('/add-to-cart/:id', (req, res, next) => {
   });
 });
 
+// Adding Product to the Cart by API
+router.post('/add-to-cart', (req, res, next) => {
+  let productId = req.body.id;
+  let cart = new Cart((req.session.cart) ? (req.session.cart) : ({}));
+  Product.findById(productId, (err, product) => {
+    if (err) {
+      return res.json(err);
+    }
+    cart.add(product, product.id);
+    req.session.cart = cart;
+    // console.log(req.session.cart);
+    return res.json({ success: true, product: product });
+  });
+});
+
+
+router.get('/add/:id', (req, res, next) => {
+  let productId = req.params.id;
+  let cart = new Cart((req.session.cart) ? (req.session.cart) : ({}));
+  Product.findById(productId, (err, product) => {
+    if (err) {
+      return res.redirect('/shopping-cart');
+    }
+    cart.add(product, product.id);
+    req.session.cart = cart;
+    // console.log(req.session.cart);
+    res.redirect('/shopping-cart');
+  });
+});
+
+
 
 //  removing the products from the cart
-router.get('/reduce/:id', (req, res, next) => {
-  var productId = req.params.id;
-  var cart = new Cart((req.session.cart) ? (req.session.cart) : ({}));
+router.post('/reduce', (req, res, next) => {
+  let productId = req.body.id;
+  let cart = new Cart((req.session.cart) ? (req.session.cart) : ({}));
 
   cart.reduceByOne(productId);
   req.session.cart = cart;
-  res.redirect('/shopping-cart');
+  // res.redirect('/shopping-cart');
+  Product.findById(productId).then(product => {
+    return res.json({ success: true, cart: req.session.cart, product: product });
+  });
 });
 
-
 // Remve all the item qty from the cart
-router.get('/remove-all/:id', (req, res, next) => {
-  var productId = req.params.id;
-  var cart = new Cart((req.session.cart) ? (req.session.cart) : ({}));
+router.post('/remove-all', (req, res, next) => {
+  let productId = req.body.id;
+  let cart = new Cart((req.session.cart) ? (req.session.cart) : ({}));
 
   cart.removeItem(productId);
   req.session.cart = cart;
-  res.redirect('/shopping-cart');
-});
+  Product.findById(productId).then(product => {
+    return res.json({ success: true, cart: req.session.cart, product: product });
+  });
 
+});
 
 
 // View the Cart if the user is logged in or logged out
@@ -71,14 +125,13 @@ router.get('/shopping-cart', (req, res, next) => {
   if (!req.session.cart) {
     return res.render('shop/shopping-cart', { products: null });
   }
-  var cart = new Cart(req.session.cart);
+  let cart = new Cart(req.session.cart);
   res.render('shop/shopping-cart', {
+    csrfToken: req.csrfToken(),
     products: cart.generateArray(),
     totalPrice: cart.totalPrice,
   });
 });
-
-
 
 
 // Redirect to the check out page
@@ -86,18 +139,18 @@ router.get('/checkout', isLoggedIn, (req, res, next) => {
   if (!req.session.cart) {
     return res.redirect('/shopping-cart');
   }
-  var cart = req.session.cart;
+  let cart = req.session.cart;
   res.render('shop/checkout', { csrfToken: req.csrfToken(), total: cart.totalPrice });
 
 });
 
+
 // Payments Via Instamojo
 router.post('/checkout-pay', isLoggedIn, (req, res, next) => {
-
   // Insta Mojo Intialization
   Insta.setKeys('test_d15d61868718d34f1ff2921e377', 'test_e2b004847eef5d5e5938f35a399');
   // Initialize Payment Data
-  var data = new Insta.PaymentData();
+  let data = new Insta.PaymentData();
   Insta.isSandboxMode(true);
   data.purpose = req.body.purpose;
   data.name = req.body.name;
@@ -113,7 +166,7 @@ router.post('/checkout-pay', isLoggedIn, (req, res, next) => {
     if (error) {
       // if there is any error with the payments then we can redirect ot the server not responding page
       req.flash('error', error.message);
-      var errMsg = req.flash('error')[0];
+      let errMsg = req.flash('error')[0];
       res.render('shop/post-checkout', { errMsg: errMsg, Errors: false });
 
     } else {
@@ -136,7 +189,6 @@ store the cart items with payment success ID in the pyaments
 collectein and destroy the cart items and then redirect to 
 generated invoice page.
 */
-
 router.get('/payment-success', isLoggedIn, (req, res, next) => {
 
   payment_Id = req.query.payment_id;
@@ -164,7 +216,6 @@ router.get('/payment-success', isLoggedIn, (req, res, next) => {
     var sccMsg = req.flash('success')[0];
     res.render('shop/post-checkout', { sccMsg: sccMsg, noErrors: true });
   });
-
 });
 
 

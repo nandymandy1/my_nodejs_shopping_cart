@@ -1,3 +1,19 @@
+<div class="row justify-content-center align-items-center mb-4">
+
+    {{#if noErrors}}
+    <div class="alert alert-s">
+        {{sccMsg}}
+    </div>
+    {{/if}}
+
+    {{#if Errors}}
+    <div class="alert alert-d">
+        {{ errMsg }}
+    </div>
+    {{/if}}
+
+</div>
+
 <div class="row justify-content-center align-items-center">
     <div class="col-md-8 col-md-offest-2">
         <h2>User Profile</h2>
@@ -5,6 +21,9 @@
         <h3 class="text-center">My Orders</h3>
         {{#each orders}}
         <div class="card mb-3" style="padding:20px;">
+            <strong class="mb-2">
+                {{this.created_at}}
+            </strong>
             <div class="card-content">
                 <ul class="list-group">
                     {{#each this.items}}

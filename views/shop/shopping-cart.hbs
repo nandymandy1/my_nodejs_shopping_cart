@@ -1,14 +1,15 @@
 {{# if products }}
+
 <div class="row justify-content-center align-items-center">
     <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-        <ul class="list-group">
+        <ul class="list-group" id="item-ul">
             {{#each products }}
-            <li class="list-group-item">
+            <li class="list-group-item" id="list-{{ this.item._id }}">
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
-                        <span class="badge ml-auto badge-secondary">{{ this.qty }}</span>
-                        <strong>{{ this.item.title }}</strong>
-                        <span class="badge badge-success">₹{{ this.price }}</span>
+                        <span class="badge ml-auto badge-secondary" id="item-qty-{{this.item._id}}">{{ this.qty }}</span>
+                        <span class="badge badge-success" id="item-price-{{this.item._id}}">₹{{ this.price }}</span>
+                        <strong>{{ this.item.title }}</strong>-{{this.item.category}}
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="dropdown">
@@ -17,8 +18,18 @@
                                 Action
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item add-item" href="/reduce/{{ this.item._id }}">Reduce by 1</a>
+                                <button class="dropdown-item add-item" id="{{ this.item._id }}" onclick="addProduct(event);">Add
+                                    by 1</button>
+                                <button class="dropdown-item remove-item" id="{{ this.item._id }}" onclick="removeProduct(event);">Reduce
+                                    by 1</button>
+                                <button class="dropdown-item remove-item" id="{{ this.item._id }}" onclick="removeAllProduct(event);">Remove
+                                    All</button>
+                                <!--
+                                <a class="dropdown-item add-item" onclick="doSomething(event);" href="/add/{{ this.item._id }}">Add
+                                    by 1</a>
+                                <a class="dropdown-item remove-item" href="/reduce/{{ this.item._id }}">Reduce by 1</a>
                                 <a class="dropdown-item remove-item" href="/remove-all/{{ this.item._id }}">Remove All</a>
+                                -->
                             </div>
                         </div>
                     </div>
@@ -28,22 +39,128 @@
         </ul>
     </div>
 </div>
-<div class="row justify-content-center align-items-center mt-3">
-    <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-        <strong class="ml-auto">Total Price: ₹{{ totalPrice }}</strong>
+
+<div id="show-checkout">
+    <div class="row justify-content-center align-items-center mt-3">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            Total Price: <strong class="ml-auto" id="total-price">₹{{ totalPrice }}</strong>
+        </div>
     </div>
-</div>
-<hr>
-<div class="row justify-content-center align-items-center">
-    <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-        <a href="/checkout" class="btn btn-success">Checkout</a>
+    <hr>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <a href="/checkout" class="btn btn-success">Checkout</a>
+        </div>
     </div>
 </div>
 
 {{ else }}
-<div class="row justify-content-center align-items-center">
-    <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-        <h2>No items in Cart.</h2>
+<div id="show-no-items">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <h2>No items in Cart.</h2>
+        </div>
     </div>
 </div>
 {{/if}}
+
+<div id="show-no-items">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <h2>No items in Cart.</h2>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#show-no-items').hide();
+    // Add product to cart
+    function addProduct(e) {
+        e.preventDefault();
+        productId = e.target.id;
+        axios.post("/add-to-cart", { id: productId, _csrf: "{{ csrfToken }}" })
+            .then(res => {
+                id = res.data.product._id;
+                proPrice = parseInt(res.data.product.price);
+                if (res.data.success) {
+                    // Updating the Quantity in the Navbar
+                    totalQty = document.getElementById('total-qty');
+                    totalQty.innerText = parseInt(totalQty.innerText) + 1;
+                    // Updatiing the price of Item
+                    price = document.getElementById(`item-price-${id}`)
+                    price.innerText = price.innerText.split("₹")[1];
+                    price.innerText = parseInt(price.innerText) + proPrice;
+                    price.innerText = "₹" + price.innerText;
+                    // Update the total Price
+                    qty = document.getElementById(`item-qty-${id}`);
+                    qty.innerText = parseInt(qty.innerText) + 1;
+                    // Update the Total price
+                    totalPrice = document.getElementById("total-price");
+                    totalPrice.innerText = totalPrice.innerText.split("₹")[1];
+                    totalPrice.innerText = parseInt(totalPrice.innerText) + proPrice;
+                    totalPrice.innerText = "₹" + totalPrice.innerText;
+                }
+            })
+            .catch(err => console.log(err));
+    }
+
+    // Remove Product from Cart
+    function removeProduct(e) {
+        e.preventDefault();
+        id = e.target.id;
+        axios.post("/reduce", { id: id, _csrf: "{{ csrfToken }}" })
+            .then(res => {
+                id = res.data.product._id;
+                proPrice = parseInt(res.data.product.price);
+                if (res.data.success) {
+                    // Updating the Quantity in the Navbar
+                    totalQty = document.getElementById('total-qty');
+                    totalQty.innerText = parseInt(totalQty.innerText) - 1;
+                    // Updatiing the price of Item
+                    price = document.getElementById(`item-price-${id}`)
+                    price.innerText = price.innerText.split("₹")[1];
+                    price.innerText = parseInt(price.innerText) - proPrice;
+                    price.innerText = "₹" + price.innerText;
+                    // Update the total Price
+                    qty = document.getElementById(`item-qty-${id}`);
+                    qty.innerText = parseInt(qty.innerText) - 1;
+                    if (parseInt(qty.innerText) == 0) {
+                        $(`#list-${id}`).remove();
+                    }
+                    // Update the Total price
+                    totalPrice = document.getElementById("total-price");
+                    totalPrice.innerText = totalPrice.innerText.split("₹")[1];
+                    totalPrice.innerText = parseInt(totalPrice.innerText) - proPrice;
+                    totalPrice.innerText = "₹" + totalPrice.innerText;
+                    if (document.getElementById("item-ul").querySelectorAll("li").length == 0) {
+                        $('#show-checkout').hide();
+                        $('#show-no-items').show();
+                    }
+                }
+            })
+            .catch(err => console.log(err));
+    }
+
+    // Remove all products from the cart
+    function removeAllProduct(e) {
+        e.preventDefault();
+        id = e.target.id;
+        axios.post("/remove-all", { id: id, _csrf: "{{ csrfToken }}" })
+            .then(res => {
+                if (res.data.success) {
+                    li = document.getElementById(`list-${id}`);
+                    li.remove();
+                    totalQty = document.getElementById('total-qty');
+                    totalQty.innerText = res.data.cart.totalQty;
+                    totalPrice = document.getElementById("total-price");
+                    totalPrice.innerText = "₹" + parseInt(res.data.cart.totalPrice);
+                    if (document.getElementById("item-ul").querySelectorAll("li").length == 0) {
+                        $('#show-checkout').hide();
+                        $('#show-no-items').show();
+                    }
+                }
+            })
+            .catch(err => console.log(err));
+    }
+
+</script>

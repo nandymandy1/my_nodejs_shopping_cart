@@ -7,11 +7,38 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
+
+            <li class="nav-item dropdown">
+
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user"></i>
+                    Category
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a href="/products/Caps" class="dropdown-item">Caps</a>
+                    <a href="/products/T-Shirts" class="dropdown-item">T-Shirts</a>
+                    <a href="/products/Mobile-Covers" class="dropdown-item">Mobile Covers</a>
+                    <a href="/products/Mugs" class="dropdown-item">Mugs</a>
+                    <a href="/products/Notebooks" class="dropdown-item">Notebooks</a>
+                    <a href="/products/Posters" class="dropdown-item">Posters</a>
+                    <a href="/products/Paintings" class="dropdown-item">Paintings</a>
+                </div>
+
+            </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="/shopping-cart"><i class="fas fa-shopping-cart"></i> Shopping Cart
-                    <span class="badge badge-danger">{{session.cart.totalQty}}</span>
+                    {{#if session.cart.totalQty }}
+                    <span class="badge badge-danger" id="total-qty">{{session.cart.totalQty}}</span>
+                    {{ else }}
+                    <span class="badge badge-danger" id="total-qty"></span>
+                    {{/if}}
+
                 </a>
             </li>
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">

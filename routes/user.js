@@ -1,22 +1,19 @@
-var express = require('express');
-var router = express.Router();
-var csrf = require('csurf');
-var passport = require('passport');
-var Order = require('../models/Order');
-var Cart = require('../models/Cart');
-
+const express = require('express');
+const router = express.Router();
+const csrf = require('csurf');
+const passport = require('passport');
+const Order = require('../models/Order');
+const Cart = require('../models/Cart');
 
 // CSRF Protection
 var csrfProtection = csrf();
 router.use(csrfProtection);
-
 
 // Protecting the routes which logged in users can see
 router.get('/logout', isLoggedIn, (req, res, next) => {
     req.logout();
     res.redirect('/');
 });
-
 
 // Redirect to Profile Page
 router.get('/profile', isLoggedIn, (req, res, next) => {
@@ -36,10 +33,9 @@ router.get('/profile', isLoggedIn, (req, res, next) => {
 
 });
 
-
 // Protecting the routes which no logged in users can only see
 router.use('/', notLoggedIn, (req, res, next) => {
-    next()
+    next();
 });
 
 // REGISTER ROUTES
@@ -62,13 +58,11 @@ router.post('/register', passport.authenticate('local.register', {
     }
 });
 
-
 // LOGIN ROUTES
 router.get('/login', (req, res, next) => {
     var messages = req.flash('error');
     res.render('users/login', { csrfToken: req.csrfToken(), messages: messages, hasErrors: (messages.length) > 0 });
 });
-
 
 // To login the user
 router.post('/login', passport.authenticate('local.login', {
@@ -84,9 +78,7 @@ router.post('/login', passport.authenticate('local.login', {
     }
 });
 
-
 module.exports = router;
-
 
 // Check for Logged In status and then redirect
 function isLoggedIn(req, res, next) {
@@ -96,7 +88,6 @@ function isLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
-
 // Check for Logged Out status and then redirect
 function notLoggedIn(req, res, next) {
     if (!req.isAuthenticated()) {
@@ -104,4 +95,3 @@ function notLoggedIn(req, res, next) {
     }
     res.redirect('/');
 }
-

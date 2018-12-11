@@ -9,8 +9,9 @@
                 <p class="card-text description ">{{ this.description }}</p>
                 <div class="clearfix">
                     <div class="price float-left">₹{{ this.price }}</div>
-                    <a href="/add-to-cart/{{this._id}}" class="btn btn-secondary btn-success float-right">Add to
-                        Shopping Cart</a>
+                    <button id="{{ this._id }}" onclick="addProduct(event);" class="btn btn-secondary btn-success float-right">Add
+                        to
+                        Shopping Cart</button>
                 </div>
             </div>
         </div>
@@ -18,3 +19,25 @@
     {{/each}}
 </div>
 {{/each}}
+
+
+<script>
+
+    function addProduct(e) {
+        e.preventDefault();
+        productId = e.target.id;
+        axios.post("/add-to-cart", { id: productId, _csrf: "{{ csrfToken }}" })
+            .then(res => {
+                if (res.data.success) {
+                    // Updating the Quantity in the Navbar
+                    totalQty = document.getElementById('total-qty');
+                    if (totalQty.innerText == '') {
+                        totalQty.innerText = 1;
+                    } else {
+                        totalQty.innerText = parseInt(totalQty.innerText) + 1;
+                    }
+                }
+            })
+            .catch(err => console.log(err));
+    }
+</script>
