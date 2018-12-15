@@ -1,61 +1,107 @@
-<nav class="navbar navbar-expand-lg mb-3 navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="/">Shopping Cart</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<!-- Navbar -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container">
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
+        <!-- Brand -->
+        <a class="navbar-brand waves-effect" href="/">
+            <!--<strong class="black-text">YuZu</strong>-->
+            <img src="/images/logo.png" height="30px" alt="">
+        </a>
 
-            <li class="nav-item dropdown">
+        <!-- Collapse -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-user"></i>
-                    Category
-                </a>
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!--Left -->
+            <ul class="navbar-nav mr-auto nav-flex-icons">
+                <li class="nav-item">
+                    <a class="nav-link waves-effect" href="/">
+                        HOME
+                    </a>
+                </li>
+                <li class="nav-item dropdown dropdown-primary">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        COLLECTION
+                    </a>
+                    <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/">All</a>
+                        <a class="dropdown-item" href="/products/T-Shirts">T-Shirts</a>
+                        <a class="dropdown-item" href="/products/Mobile-Covers">Mobile Covers</a>
+                        <a class="dropdown-item" href="/products/Mugs">Mugs</a>
+                        <a class="dropdown-item" href="/products/Notebooks">Notebooks</a>
+                        <a class="dropdown-item" href="/products/Posters">Posters</a>
+                        <a class="dropdown-item" href="/products/Paintings">Paintings</a>
+                        <a class="dropdown-item" href="/products/Caps">Caps</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link waves-effect" href="/">
+                        GALLERY
+                    </a>
+                </li>
+            </ul>
+            <!--Left -->
 
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a href="/products/Caps" class="dropdown-item">Caps</a>
-                    <a href="/products/T-Shirts" class="dropdown-item">T-Shirts</a>
-                    <a href="/products/Mobile-Covers" class="dropdown-item">Mobile Covers</a>
-                    <a href="/products/Mugs" class="dropdown-item">Mugs</a>
-                    <a href="/products/Notebooks" class="dropdown-item">Notebooks</a>
-                    <a href="/products/Posters" class="dropdown-item">Posters</a>
-                    <a href="/products/Paintings" class="dropdown-item">Paintings</a>
-                </div>
+            <!-- Right -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <div class="input-group">
+                        <input type="text" name="query" id="query" class="form-control input-search" placeholder="Search"
+                            aria-label="Search" aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-md btn-dark m-0 px-3 py-2 z-depth-0 waves-effect" type="button" id="search-btn">
+                                <i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <ul class="list-group" id="result">
+                    </ul>
+                </li>
 
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link waves-effect" href="/shopping-cart">
+                        {{#if session.cart.totalQty }}
+                        <span class="badge red z-depth-1 mr-1" id="total-qty">{{session.cart.totalQty}}</span>
+                        {{ else }}
+                        <span class="badge red z-depth-1 mr-1" id="total-qty"></span>
+                        {{/if}}
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="/shopping-cart"><i class="fas fa-shopping-cart"></i> Shopping Cart
-                    {{#if session.cart.totalQty }}
-                    <span class="badge badge-danger" id="total-qty">{{session.cart.totalQty}}</span>
-                    {{ else }}
-                    <span class="badge badge-danger" id="total-qty"></span>
-                    {{/if}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
+                        {{#if login }}
+                        <a class="dropdown-item a-item" href="/user/profile">My Orders</a>
+                        <a class="dropdown-item a-item" href="/user/logout">Logout</a>
+                        {{ else }}
+                        <a class="dropdown-item a-item" href="/user/login">Login</a>
+                        <a class="dropdown-item a-item" href="/user/register">Register</a>
+                        {{/if}}
+                    </div>
+                </li>
 
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="https://www.facebook.com/mdbootstrap" class="nav-link waves-effect" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://www.instagram.com/yuzu_in/" class="nav-link waves-effect" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </li>
+            </ul>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-user"></i>
-                    User Management
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {{#if login }}
-                    <a class="dropdown-item" href="/user/profile">User Account</a>
-                    <a class="dropdown-item" href="/user/logout">Logout</a>
-                    {{ else }}
-                    <a class="dropdown-item" href="/user/login">Login</a>
-                    <a class="dropdown-item" href="/user/register">Register</a>
-                    {{/if}}
-                </div>
-            </li>
-        </ul>
+        </div>
     </div>
 </nav>
-<br><br><br>
+<!-- Navbar -->

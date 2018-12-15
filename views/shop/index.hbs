@@ -1,28 +1,75 @@
-{{#each products }}
-<div class="row mb-3 justify-content-center align-items-center">
-    {{#each this }}
-    <div class="col-sm-6 col-md-4">
-        <div class="card">
-            <img class="card-img-top" src="{{ this.imagePath }}" alt="Card image cap" class="img-fluid">
-            <div class="card-body">
-                <h5 class="card-title">{{ this.title }}</h5>
-                <p class="card-text description ">{{ this.description }}</p>
-                <div class="clearfix">
-                    <div class="price float-left">₹{{ this.price }}</div>
-                    <button id="{{ this._id }}" onclick="addProduct(event);" class="btn btn-secondary btn-success float-right">Add
-                        to
-                        Shopping Cart</button>
+<main {{#if page}} {{else }} class="mt-5 pt-4" {{/if}}>
+    <div class="container">
+        {{#if category}}
+        <h3 class="text-center mt-3 mb-3">{{ category }}</h3>
+        {{/if }}
+
+        <!--Trending-->
+        <section class="text-center mt-5 mb-4">
+            {{#each products }}
+            <!--Grid row-->
+            <div class="row wow fadeIn">
+                {{#each this }}
+                <!--Grid column-->
+                <div class="col-lg-4 col-sm-12 col-md-6 mb-4">
+
+                    <!--Card-->
+                    <div class="card">
+
+                        <!--Card image-->
+                        <div class="view overlay zoom">
+                            <img src="{{ this.imagePath }}" class="card-img-top" alt="">
+                            <a href="/product/{{ this._id }}">
+                                <div class="mask flex-center rgba-red-light">
+                                    <p class="white-text">Buy Now</p>
+                                </div>
+                            </a>
+                        </div>
+                        <!--Card image-->
+
+                        <!--Card content-->
+                        <div class="card-body text-center">
+                            <!--Category & Title-->
+                            <a href="/product/{{ this._id }}" class="grey-text">
+                                <h5>{{ this.category }}</h5>
+                            </a>
+                            <h5>
+                                <strong>
+                                    <a href="/product/{{ this._id }}" class="dark-grey-text">{{ this.title }}
+                                    </a>
+                                    <span class="badge badge-pill danger-color">NEW</span>
+                                </strong>
+                            </h5>
+
+                            <h4 class="font-weight-bold blue-text">
+                                <strong>₹{{ this.price }}</strong>
+                            </h4>
+                            <button id="{{ this._id }}" onclick="addProduct(event);" class="btn btn-dark btn-block btn-md">Add
+                                to Cart
+                            </button>
+
+                        </div>
+                        <!--Card content-->
+
+                    </div>
+                    <!--Card-->
+
                 </div>
+                <!--Grid column-->
+                {{/each}}
+
             </div>
-        </div>
+            <!--Grid row-->
+            {{/each}}
+        </section>
+        <!--Trending-->
+
+        <!-- Hot Aarrivals -->
+
+        <!-- Hot Aarrivals -->
     </div>
-    {{/each}}
-</div>
-{{/each}}
-
-
+</main>
 <script>
-
     function addProduct(e) {
         e.preventDefault();
         productId = e.target.id;
@@ -36,6 +83,9 @@
                     } else {
                         totalQty.innerText = parseInt(totalQty.innerText) + 1;
                     }
+                    toastr.success('Product Added to Cart.');
+                } else {
+                    toastr.error('Unable to Add the Product to Cart.');
                 }
             })
             .catch(err => console.log(err));

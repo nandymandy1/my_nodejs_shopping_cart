@@ -1,0 +1,151 @@
+<!-- Navbar -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container">
+
+        <!-- Brand -->
+        <a class="navbar-brand waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">
+            <strong class="blue-text">MDB</strong>
+        </a>
+
+        <!-- Collapse -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <!-- Left -->
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link waves-effect" href="#">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">About
+                        MDB</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/getting-started/download/"
+                        target="_blank">Free download</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link waves-effect" href="https://mdbootstrap.com/education/bootstrap/" target="_blank">Free
+                        tutorials</a>
+                </li>
+            </ul>
+
+            <!-- Right -->
+            <ul class="navbar-nav nav-flex-icons">
+                <li class="nav-item">
+                    <a class="nav-link waves-effect">
+                        <span class="badge red z-depth-1 mr-1"> 1 </span>
+                        <i class="fa fa-shopping-cart"></i>
+                        <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://www.facebook.com/mdbootstrap" class="nav-link waves-effect" target="_blank">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://twitter.com/MDBootstrap" class="nav-link waves-effect" target="_blank">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="nav-link border border-light rounded waves-effect"
+                        target="_blank">
+                        <i class="fa fa-github mr-2"></i>MDB GitHub
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+</nav>
+<!-- Navbar -->
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand waves-effect" href="/">
+            <strong class="blue-text">Shopping Cart</strong>
+        </a>
+    </div>
+    <!-- Collapse -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav nav-flex-icons">
+
+            <li class="nav-item dropdown">
+
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user"></i>
+                    Category
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a href="/products/Caps" class="dropdown-item">Caps</a>
+                    <a href="/products/T-Shirts" class="dropdown-item">T-Shirts</a>
+                    <a href="/products/Mobile-Covers" class="dropdown-item">Mobile Covers</a>
+                    <a href="/products/Mugs" class="dropdown-item">Mugs</a>
+                    <a href="/products/Notebooks" class="dropdown-item">Notebooks</a>
+                    <a href="/products/Posters" class="dropdown-item">Posters</a>
+                    <a href="/products/Paintings" class="dropdown-item">Paintings</a>
+                </div>
+
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link waves-effect" href="/shopping-cart">
+                    {{#if session.cart.totalQty }}
+                    <span class="badge red z-depth-1 mr-1" id="total-qty">{{session.cart.totalQty}}</span> My Cart
+                    {{ else }}
+                    <span class="badge red z-depth-1 mr-1" id="total-qty">{{session.cart.totalQty}}</span> My Cart
+                    {{/if}}
+                    <i class="fa fa-shopping-cart"></i>
+                </a>
+            </li>
+
+            <!--<li class="nav-item">
+                <a class="nav-link" href="/shopping-cart"><i class="fas fa-shopping-cart"></i> Shopping Cart
+                    {{#if session.cart.totalQty }}
+                    <span class="badge badge-danger" id="total-qty">{{session.cart.totalQty}}</span>
+                    {{ else }}
+                    <span class="badge badge-danger" id="total-qty"></span>
+                    {{/if}}
+
+                </a>
+            </li>-->
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user"></i>
+                    User Management
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {{#if login }}
+                    <a class="dropdown-item" href="/user/profile">User Account</a>
+                    <a class="dropdown-item" href="/user/logout">Logout</a>
+                    {{ else }}
+                    <a class="dropdown-item" href="/user/login">Login</a>
+                    <a class="dropdown-item" href="/user/register">Register</a>
+                    {{/if}}
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<br><br><br>

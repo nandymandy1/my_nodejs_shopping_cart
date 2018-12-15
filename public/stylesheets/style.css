@@ -1,82 +1,52 @@
-body {
-    background: #FBFCFC;
-}
-
 .btn {
     border-radius: 0;
+}
+
+.btn-outline-dark {
+    background-color: white;
+    color: black;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 500;
+}
+
+.btn-dark:hover {
+    color: white;
+    background: black;
 }
 
 .card {
     border-radius: 0;
 }
 
-.card img {
-    max-height: 150px;
+.input-search {
+    border-radius: 0;
 }
 
-.card .description {
-    color: #7f7f7f;
+#result {
+    position: absolute;
+    width: 91%;
+    max-width: 300px;
+    cursor: pointer;
+    overflow-y: auto;
+    max-height: 500px;
+    box-sizing: border-box;
+    z-index: 1001;
 }
 
-.price {
-    font-weight: bold;
-    font-size: 16px;
+.dropdown-menu {
+    border-radius: 0;
+    background: white;
+    color: black;
 }
 
 .form-control {
     border-radius: 0;
 }
 
-.dropdown-menu {
-    margin-top: 8px;
-    border-radius: 0;
-    opacity: 0.9;
+.toast-success {
+    background-color: #2ECC71;
 }
 
-.dropdown-item:hover {
-    color: #fff;
-    background: #2ECC71;
-}
-
-.add-item:hover {
-    color: #fff;
-    background: #2ECC71;
-}
-
-.remove-item:hover {
-    color: #fff;
-    background: #E74C3C;
-}
-
-.list-group {
-    border-radius: 0;
-}
-
-.list-group-item {
-    border-radius: 0;
-}
-
-.badge {
-    border-radius: 0;
-}
-
-.alert {
-    border-radius: 0;
-}
-
-.alert-s {
-    background: #2ECC71;
-    color: #fff;
-}
-
-.alert-d {
-    background: #E74C3C;
-    color: #fff;
-}
-
-form {
-    background-color: #fff;
-    padding: 30px;
-    border: solid 2px;
-    border-color: #FBFCFC;
+.toast-error {
+    background-color: #E74C3C;
 }

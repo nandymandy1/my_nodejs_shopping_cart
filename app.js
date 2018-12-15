@@ -59,7 +59,7 @@ app.use(session({
   store: new MongoStore({
     mongooseConnection: mongoose.connection
   }),
-  cookie: { maxAge: 180 * 60 * 1000 }
+  cookie: { maxAge: 120 * 60 * 1000 }
 }));
 // Session Middleware
 

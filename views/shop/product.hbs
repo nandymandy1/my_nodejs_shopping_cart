@@ -1,0 +1,122 @@
+<!--Main layout-->
+<main class="mt-5 pt-4">
+    <div class="container dark-grey-text mt-2">
+        <div class="row d-flex justify-content-center wow fadeIn">
+            <div class="col-md-6 text-center">
+                <h3 class="my-3 h3">{{ product.title }}</h3>
+            </div>
+        </div>
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+            <!--Grid column-->
+            <div class="col-md-6 text-center mb-4">
+                <img src="{{ product.imagePath }}" class="img-fluid" alt="">
+            </div>
+            <!--Grid column-->
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+                <!--Content-->
+                <div class="p-4">
+                    <h4 class="h4">
+                        <!--<span class="mr-1">
+                            <del>$200</del>
+                        </span>-->
+                        <span>₹{{ product.price }}</span>
+                    </h4>
+                    <div class="mb-3">
+                        <a>
+                            <span class="badge purple mr-1">{{ product.category }}</span>
+                        </a>
+                        <!--Latest If Block-->
+                        <a>
+                            <span class="badge blue mr-1">New</span>
+                        </a>
+                        <!--Latest If Block-->
+                        <!--Bestseller If Block-->
+                        <a>
+                            <span class="badge red mr-1">Bestseller</span>
+                        </a>
+                        <!--Bestseller If Block-->
+                    </div>
+                    <p class="lead font-weight-bold">Description</p>
+                    <p class="text-left">{{ product.description }}</p>
+                    <div class="text-left">
+                        <button class="btn btn-dark btn-md my-0 p" id="{{ product._id }}" onclick="addProduct(event);">Add
+                            to cart
+                            <i class="fa fa-shopping-cart ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                <!--Content-->
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+        <hr>
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center wow fadeIn">
+            <!--Grid column-->
+            <div class="col-md-6 text-center">
+                <h4 class="my-4 h4">Additional information</h4>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus suscipit modi sapiente illo soluta
+                    odit voluptates,
+                    quibusdam officia. Neque quibusdam quas a quis porro? Molestias illo neque eum in laborum.</p>
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+
+            <!--Grid column-->
+            <div class="col-lg-4 col-md-12 mb-4">
+
+                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/11.jpg" class="img-fluid"
+                    alt="">
+
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-lg-4 col-md-6 mb-4">
+
+                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/12.jpg" class="img-fluid"
+                    alt="">
+
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-lg-4 col-md-6 mb-4">
+
+                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/13.jpg" class="img-fluid"
+                    alt="">
+
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+    </div>
+</main>
+
+<script>
+
+    function addProduct(e) {
+        e.preventDefault();
+        productId = e.target.id;
+        axios.post("/add-to-cart", { id: productId, _csrf: "{{ csrfToken }}" })
+            .then(res => {
+                if (res.data.success) {
+                    // Updating the Quantity in the Navbar
+                    totalQty = document.getElementById('total-qty');
+                    if (totalQty.innerText == '') {
+                        totalQty.innerText = 1;
+                    } else {
+                        totalQty.innerText = parseInt(totalQty.innerText) + 1;
+                    }
+                }
+            })
+            .catch(err => console.log(err));
+    }
+</script>
