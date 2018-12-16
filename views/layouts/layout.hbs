@@ -100,12 +100,12 @@
           items.forEach(item => {
             $('#result').append(
               `
-              <a href="/product/${item._id}">
-            <li class="list-group-item">
-              <img src=${item.imagePath} class="" height="40" width="40">
-              ${item.title}
-              <span class="text-muted">${item.category}</span>
-            </li>
+            <a href="/product/${item._id}">
+              <li class="list-group-item">
+                <img src=${item.imagePath} class="" height="40" width="40">
+                ${item.title}
+                <span class="text-muted">${item.category}</span>
+              </li>
             </a>
             `
             );
